@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 03. Feb 2023 2:07 AM
 %%%-------------------------------------------------------------------
--module(lab1).
+-module(minimaltask).
 -author("KATCO").
 -import(math,[pi/0]).
 %% API
