@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -module(main_working).
 -export([while/1, while/2, start/0]).
--import(lab1, [isPrime/1, cylinderArea/2, reverse/1, sum/3, uniqueSum/1, extractRandomN/2, uniqueSum2/1, firstFibonacciElements/1]).
--import(lab1, [translator/2]).
+-import(minimaltask, [isPrime/1, cylinderArea/2, reverse/1, sum/3, uniqueSum/1, extractRandomN/2, uniqueSum2/1, firstFibonacciElements/1]).
+-import(minimaltask, [translator/2]).
 
 while(T) -> while(T,0).
 while([], Acc) -> Acc;

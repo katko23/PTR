@@ -117,4 +117,4 @@ factorize(N,Arr,[H|T]) ->
 .
 getPrimes(N) ->
   lists:filter(fun(P)-> if P == 0 -> false; true -> true end end,
-    lists:map(fun(El) -> case lab1:isPrime(El) of true -> El; false -> 0 end end, lists:seq(2,N))).
+    lists:map(fun(El) -> case minimaltask:isPrime(El) of true -> El; false -> 0 end end, lists:seq(2,N))).
