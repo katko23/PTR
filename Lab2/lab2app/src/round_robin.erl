@@ -9,15 +9,15 @@
 -module(round_robin).
 -author("KATCO").
 
--export([start/0, stop/0]).
+-export([start/1, stop/0]).
 
-start() ->
+start(Name) ->
 %%  {Pid, _} = spawn_link(fun() -> loop() end),
   {Pid, _} = spawn_monitor(
     fun () ->
       loop(1,1)
     end),
-  register(rr, Pid),
+  register(Name, Pid),
   {ok, Pid}.
 
 loop(N, I) ->
@@ -28,7 +28,9 @@ loop(N, I) ->
   receive
     {PrintersNumb, getNext, Self} ->
         Self ! {Index},
-  loop(PrintersNumb, Index+1)
+  loop(PrintersNumb, Index+1);
+    stop ->
+      ok
   end.
 
 stop() ->

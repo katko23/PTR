@@ -31,7 +31,8 @@ init([]) ->
                  period => 1},
 
 
-
+  BatchSize = 9,
+  Timer = 10000,
   Stream1 = "/tweets/1",
   Stream2 = "/tweets/2",
 
@@ -91,16 +92,64 @@ init([]) ->
     type => supervisor,
     modules => [print_supervisor]},
 
+  EmotionSupervisor = #{
+    id => emotion_supervisor,
+    start => {emotion_supervisor, start_link, []},
+    restart => permanent,
+    shutdown => 2000,
+    type => supervisor,
+    modules => [emotion_supervisor]},
+
+  EngagementSupervisor = #{
+    id => engagement_supervisor,
+    start => {engagement_supervisor, start_link, []},
+    restart => permanent,
+    shutdown => 2000,
+    type => supervisor,
+    modules => [engagement_supervisor]},
+
+  GenericSupervisor = #{
+    id => generic_supervisor,
+    start => {generic_supervisor, start_link, []},
+    restart => permanent,
+    shutdown => 2000,
+    type => supervisor,
+    modules => [generic_supervisor]},
+
   RoundRobin = #{
     id => round_robin,
-    start => {round_robin, start, []},
+    start => {round_robin, start, [rr]},
     restart => permanent,
     shutdown => 2000,
     type => worker,
     modules => [round_robin]},
 
+  RoundRobinEmotion = #{
+    id => round_robin_emotion,
+    start => {round_robin, start, [rre]},
+    restart => permanent,
+    shutdown => 2000,
+    type => worker,
+    modules => [round_robin]},
+
+  RoundRobinEngagement = #{
+    id => round_robin_engagement,
+    start => {round_robin, start, [rreng]},
+    restart => permanent,
+    shutdown => 2000,
+    type => worker,
+    modules => [round_robin]},
+
+  Batcher = #{
+    id => batcher,
+    start => {batcher, start, [Timer, BatchSize]},
+    restart => permanent,
+    shutdown => 2000,
+    type => worker,
+    modules => [batcher]},
+
 %%  Popular = #{
-%%    id => popular,
+%%    id => popular,5
 %%    start => {print, start_popular, []},
 %%    restart => permanent,
 %%    shutdown => 2000,
@@ -116,7 +165,39 @@ init([]) ->
 %%    type => worker,
 %%    modules => [print_scaler]},
 
-    ChildSpecs = [RoundRobin, Supervisor, SupervisorLB, Printer, Reader1, Reader2, WorkLoad],
+  DBDown = #{
+    id => dbdown,
+    start => {dbdown, start, []},
+    restart => permanent,
+    shutdown => 2000,
+    type => worker,
+    modules => [dbdown]},
+
+  Agregator = #{
+    id => agregator,
+    start => {agregator, start, [BatchSize]},
+    restart => permanent,
+    shutdown => 2000,
+    type => worker,
+    modules => [agregator]},
+
+
+    ChildSpecs = [
+      Batcher,
+      Agregator,
+      DBDown,
+      RoundRobin,
+      RoundRobinEmotion,
+      RoundRobinEngagement,
+      EmotionSupervisor,
+      EngagementSupervisor,
+%%      Supervisor,
+      GenericSupervisor,
+      SupervisorLB,
+      Printer,
+      Reader1,
+      Reader2,
+      WorkLoad],
     {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions
