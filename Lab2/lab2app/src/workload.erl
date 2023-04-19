@@ -32,7 +32,7 @@ loop(N, Min, Max) ->
        false -> ok
       end
     end,
-  io:format("My workflow is ~p~n", [N]),
+%%  io:format("My workflow is ~p~n", [N]),
   receive
     {add} ->
       loop(N + 1, Min, Max);

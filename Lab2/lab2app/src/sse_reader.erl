@@ -49,7 +49,7 @@ send_event(Stream) ->
     end
   },
   {ok, _Ref} = shotgun:get(Conn, Stream, #{}, Options),
-  delay(10000),
+  delay(100000),
   shotgun:close(Conn).
 
 delay(Miliseconds) ->
